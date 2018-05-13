@@ -1,0 +1,209 @@
+multipletester_MTS
+Running MATLAB ode15s: 
+Elapsed time is 1.126722 seconds.
+Running multiple time stepping integrator: 
+
+Running with inner ERK integrator: Heun-Euler-ERK (order = 2)
+m value = 5
+Elapsed time is 3.829346 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 4.60815e-03,  rmserr = 5.41703e-04
+Elapsed time is 7.403826 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 8.33194e-04,  rmserr = 9.80561e-05
+   maxrate = 2.46746e+00,  rmsrate = 2.46582e+00
+Elapsed time is 21.855709 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 1.67974e-04,  rmserr = 1.97735e-05
+   maxrate = 2.31042e+00,  rmsrate = 2.31004e+00
+Elapsed time is 33.597129 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 3.69695e-05,  rmserr = 4.35232e-06
+   maxrate = 2.18383e+00,  rmsrate = 2.18371e+00
+m value = 25
+Elapsed time is 21.339764 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.39217e-03,  rmserr = 2.81329e-04
+Elapsed time is 33.189659 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 3.13373e-04,  rmserr = 3.68804e-05
+   maxrate = 2.93237e+00,  rmsrate = 2.93133e+00
+Elapsed time is 58.215712 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 4.22839e-05,  rmserr = 4.97713e-06
+   maxrate = 2.88970e+00,  rmsrate = 2.88947e+00
+Elapsed time is 113.181935 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 6.06845e-06,  rmserr = 7.14338e-07
+   maxrate = 2.80071e+00,  rmsrate = 2.80064e+00
+m value = 50
+Elapsed time is 25.724145 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.31741e-03,  rmserr = 2.72541e-04
+Elapsed time is 52.462129 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.94885e-04,  rmserr = 3.47047e-05
+   maxrate = 2.97429e+00,  rmsrate = 2.97327e+00
+Elapsed time is 112.993569 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.76990e-05,  rmserr = 4.43748e-06
+   maxrate = 2.96755e+00,  rmsrate = 2.96732e+00
+Elapsed time is 217.255849 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.92717e-06,  rmserr = 5.79999e-07
+   maxrate = 2.93569e+00,  rmsrate = 2.93562e+00
+m value = 100
+Elapsed time is 53.751913 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.29593e-03,  rmserr = 2.70015e-04
+Elapsed time is 112.607099 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.89527e-04,  rmserr = 3.40743e-05
+   maxrate = 2.98730e+00,  rmsrate = 2.98629e+00
+Elapsed time is 206.684662 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.63651e-05,  rmserr = 4.28049e-06
+   maxrate = 2.99307e+00,  rmsrate = 2.99283e+00
+Elapsed time is 412.185465 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.59450e-06,  rmserr = 5.40843e-07
+   maxrate = 2.98458e+00,  rmsrate = 2.98449e+00
+Running MATLAB ode15s: 
+Elapsed time is 1.143018 seconds.
+Running multiple time stepping integrator: 
+
+Running with inner ERK integrator: ERK-2-2 (order = 3)
+m value = 5
+Elapsed time is 3.719378 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 4.60815e-03,  rmserr = 5.41703e-04
+Elapsed time is 7.392853 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 8.33194e-04,  rmserr = 9.80561e-05
+   maxrate = 2.46746e+00,  rmsrate = 2.46582e+00
+Elapsed time is 14.777367 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 1.67974e-04,  rmserr = 1.97735e-05
+   maxrate = 2.31042e+00,  rmsrate = 2.31004e+00
+Elapsed time is 30.498544 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 3.69695e-05,  rmserr = 4.35232e-06
+   maxrate = 2.18383e+00,  rmsrate = 2.18371e+00
+m value = 25
+Elapsed time is 14.096521 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.39217e-03,  rmserr = 2.81329e-04
+Elapsed time is 29.183671 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 3.13373e-04,  rmserr = 3.68804e-05
+   maxrate = 2.93237e+00,  rmsrate = 2.93133e+00
+Elapsed time is 60.766337 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 4.22839e-05,  rmserr = 4.97713e-06
+   maxrate = 2.88970e+00,  rmsrate = 2.88947e+00
+Elapsed time is 116.121224 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 6.06845e-06,  rmserr = 7.14338e-07
+   maxrate = 2.80071e+00,  rmsrate = 2.80064e+00
+m value = 50
+Elapsed time is 26.160216 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.31741e-03,  rmserr = 2.72541e-04
+Elapsed time is 56.913349 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.94885e-04,  rmserr = 3.47047e-05
+   maxrate = 2.97429e+00,  rmsrate = 2.97327e+00
+Elapsed time is 103.742570 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.76990e-05,  rmserr = 4.43748e-06
+   maxrate = 2.96755e+00,  rmsrate = 2.96732e+00
+Elapsed time is 220.822248 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.92717e-06,  rmserr = 5.79999e-07
+   maxrate = 2.93569e+00,  rmsrate = 2.93562e+00
+m value = 100
+Elapsed time is 52.655060 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.29593e-03,  rmserr = 2.70015e-04
+Elapsed time is 102.849290 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.89527e-04,  rmserr = 3.40743e-05
+   maxrate = 2.98730e+00,  rmsrate = 2.98629e+00
+Elapsed time is 210.446715 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.63651e-05,  rmserr = 4.28049e-06
+   maxrate = 2.99307e+00,  rmsrate = 2.99283e+00
+Elapsed time is 419.452923 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.59450e-06,  rmserr = 5.40843e-07
+   maxrate = 2.98458e+00,  rmsrate = 2.98449e+00
+Running MATLAB ode15s: 
+Elapsed time is 1.162377 seconds.
+Running multiple time stepping integrator: 
+
+Running with inner ERK integrator: ERK-4-4 (order = 4)
+m value = 5
+Elapsed time is 9.293974 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.29208e-03,  rmserr = 2.69563e-04
+Elapsed time is 18.635156 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.87941e-04,  rmserr = 3.38876e-05
+   maxrate = 2.99281e+00,  rmsrate = 2.99180e+00
+Elapsed time is 37.755095 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.59331e-05,  rmserr = 4.22964e-06
+   maxrate = 3.00239e+00,  rmsrate = 3.00215e+00
+Elapsed time is 79.219183 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.48444e-06,  rmserr = 5.27889e-07
+   maxrate = 3.00231e+00,  rmsrate = 3.00223e+00
+m value = 25
+Elapsed time is 39.854110 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.28884e-03,  rmserr = 2.69182e-04
+Elapsed time is 80.926624 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.87751e-04,  rmserr = 3.38652e-05
+   maxrate = 2.99173e+00,  rmsrate = 2.99071e+00
+Elapsed time is 183.007850 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.59216e-05,  rmserr = 4.22829e-06
+   maxrate = 3.00190e+00,  rmsrate = 3.00166e+00
+Elapsed time is 329.225802 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.48374e-06,  rmserr = 5.27807e-07
+   maxrate = 3.00208e+00,  rmsrate = 3.00199e+00
+m value = 50
+Elapsed time is 77.495387 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.28883e-03,  rmserr = 2.69182e-04
+Elapsed time is 171.706754 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.87750e-04,  rmserr = 3.38652e-05
+   maxrate = 2.99172e+00,  rmsrate = 2.99071e+00
+Elapsed time is 349.160887 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.59216e-05,  rmserr = 4.22829e-06
+   maxrate = 3.00189e+00,  rmsrate = 3.00166e+00
+Elapsed time is 603.596935 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.48373e-06,  rmserr = 5.27806e-07
+   maxrate = 3.00208e+00,  rmsrate = 3.00199e+00
+m value = 100
+Elapsed time is 152.155431 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.28883e-03,  rmserr = 2.69182e-04
+Elapsed time is 323.442564 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.87750e-04,  rmserr = 3.38652e-05
+   maxrate = 2.99172e+00,  rmsrate = 2.99071e+00
+Elapsed time is 618.553338 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.59216e-05,  rmserr = 4.22829e-06
+   maxrate = 3.00189e+00,  rmsrate = 3.00166e+00
+Elapsed time is 1232.394749 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.48372e-06,  rmserr = 5.27805e-07
+   maxrate = 3.00208e+00,  rmsrate = 3.00200e+00
+diary off
