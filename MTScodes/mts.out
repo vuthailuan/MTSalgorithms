@@ -1,0 +1,20 @@
+driver_p2MTS
+Running MATLAB ode15s: 
+Elapsed time is 1.122064 seconds.
+Running multiple time stepping integrator: 
+Elapsed time is 11.260996 seconds.
+Accuracy/Work Results, h = 0.01:
+   maxerr = 2.27751e-03,  rmserr = 2.67850e-04
+Elapsed time is 22.395148 seconds.
+Accuracy/Work Results, h = 0.005:
+   maxerr = 2.86373e-04,  rmserr = 3.37031e-05
+   maxrate = 2.99149e+00,  rmsrate = 2.99047e+00
+Elapsed time is 46.066025 seconds.
+Accuracy/Work Results, h = 0.0025:
+   maxerr = 3.57522e-05,  rmserr = 4.20835e-06
+   maxrate = 3.00179e+00,  rmsrate = 3.00155e+00
+Elapsed time is 90.374684 seconds.
+Accuracy/Work Results, h = 0.00125:
+   maxerr = 4.46273e-06,  rmserr = 5.25335e-07
+   maxrate = 3.00203e+00,  rmsrate = 3.00195e+00
+diary off
