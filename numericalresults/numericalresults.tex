@@ -218,7 +218,7 @@ Two sets of c values:
 %_____________________________________________________________________________%
 %________________________Brusselator Problem__________________________________%
 %_____________________________________________________________________________%
-\subsection{Example: Brusselator Problem}
+\subsection{Brusselator Problem}
 We consider the Brusselator problem represented by  \emph{(Why?)}
 \begin{equation}
 \mathbf{\frac{dy}{dt}} = \begin{bmatrix}
@@ -239,23 +239,34 @@ where $y_1(0) = 1.2, y_2(0) = 3.1,$ and $y_3(0) = 3$, with parameters $a=1, b=3.
 
 %_______________________________________________________________________%
 %__________________________Prothero-Robinson____________________________%
-\subsection{Example: Modified Prothero-Robinson Problem}
+\subsection{Modified Prothero-Robinson Problem}
 We consider the Modified Prothero-Robinson Problem
 \begin{equation}
 \mathbf{\frac{dy}{dt}} = \begin{bmatrix}
-\gamma & \epsilon \\ \epsilon & 1
+\Gamma & \epsilon \\ \epsilon & 1
 \end{bmatrix}    \begin{bmatrix} y_1 - g(t) \\ y_2 - g(\omega t) \end{bmatrix} - \begin{bmatrix}
 g(t) \\ g(\omega t)
 \end{bmatrix}' 
 \end{equation}
 In the form of (\ref{eq: 1.1}) we have \begin{equation}
 \mathbf{\frac{dy}{dt}} = \begin{bmatrix}
-\gamma & \epsilon \\ \epsilon & 1
+\Gamma & \epsilon \\ \epsilon & 1
 \end{bmatrix}    \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} - \begin{bmatrix}
-\gamma & \epsilon \\ \epsilon & 1
+\Gamma & \epsilon \\ \epsilon & 1
 \end{bmatrix} \begin{bmatrix} g(t)+ g'(t)\\ g(\omega t)+g'(\omega t) \end{bmatrix}. 
 \end{equation}
-we set $g(t) = \cos(t)$ with $\omega = 100, \gamma = - 1/ \omega = -0.01 , \epsilon = 1/\omega = 0.01$.
+we set $g(t) = \cos(t)$ with $\omega = 100, \Gamma = - 1/ \omega = -0.01 , \epsilon = 1/\omega = 0.01$.
+
+\subsection{Reaction-Diffusion problem}
+We consider a reaction-diffusion problem with a traveling wave solution.
+\begin{equation}
+u_t = \epsilon u_{xx} + \gamma u^2(1 - u),
+\end{equation}
+for $0<x<L, 0<t\leq T$. Initial and boundary conditions are given by
+\begin{equation}
+u_x(0,t) = u_x(L,t) = 0 , \hspace{9mm} u(x,0) = (1+ e^{\lambda(x-1)})^{-1},
+\end{equation}
+where $\lambda = \frac{1}{2} \sqrt{2 \gamma/\epsilon}$.
 \subsection{Set up of test problems and results}
 \underline{Things we are keeping track of:} 
 \begin{itemize}

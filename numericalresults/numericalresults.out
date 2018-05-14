@@ -6,6 +6,7 @@
 \BOOKMARK [2][-]{subsection.2.2}{Third order method expRK32s3}{section.2}% 6
 \BOOKMARK [2][-]{subsection.2.3}{Fourth order method expRK43s6}{section.2}% 7
 \BOOKMARK [1][-]{section.3}{Test problems}{}% 8
-\BOOKMARK [2][-]{subsection.3.1}{Example: Brusselator Problem}{section.3}% 9
-\BOOKMARK [2][-]{subsection.3.2}{Example: Modified Prothero-Robinson Problem}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.3}{Set up of test problems and results}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.1}{Brusselator Problem}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Modified Prothero-Robinson Problem}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{Reaction-Diffusion problem}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.4}{Set up of test problems and results}{section.3}% 12
