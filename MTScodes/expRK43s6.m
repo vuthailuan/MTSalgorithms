@@ -74,7 +74,7 @@ while t_n < tvals(2)*ONEMSM
     % Determine time step, and times to evaluate at 
     h_fast = c_3*h/ceil(c_3*m);
     tsteps = 0:h_fast:c_3*h;
-    
+            
     % Determine the largest index so that c_4*h < tsteps(index)
     index  = floor(c_4*h/h_fast);
     
@@ -83,13 +83,18 @@ while t_n < tvals(2)*ONEMSM
     Yim = Y(:,2);
     Pdata.ffast   = Pdata.ffast + nflocal + 1;     % one from D_n2 evaluation?
     
-    % Determine step leftover 
-    h_leftover = c_4*h - tsteps(index);
+    if mod(c_4*h,h_fast) > eps
+        
+        % Determine step leftover 
+        h_leftover = c_4*h - tsteps(index);
     
-    % Solve for U_{n,4}
-    [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_4*h],Yim,B,h_leftover);
-    U_n4 = Y(:,2);
-    Pdata.ffast   = Pdata.ffast + nflocal; 
+        % Solve for U_{n,4}
+        [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_4*h],Yim,B,h_leftover);
+        U_n4 = Y(:,2);
+        Pdata.ffast   = Pdata.ffast + nflocal; 
+    else
+        U_n4 = Yim;
+    end
     
     %Solve for U_{n,3}
     [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_3*h],Yim,B,h_fast);
@@ -100,7 +105,7 @@ while t_n < tvals(2)*ONEMSM
     D_n3 = D_ni(t_n,c_3,U_n3);
     D_n4 = D_ni(t_n,c_4,U_n4);
     
-    % p_{n,5} and p_{n,5} are the same, use same polynomial
+    % p_{n,5} and p_{n,6} are the same, use same polynomial
     p_n5 = @(t) p_n2 + (t/h)*(-c_4/(c_3*(c_3-c_4)))*D_n3 +...
         (t/h)*(c_3/(c_4*(c_3-c_4)))*D_n4 +...
         (t^2/(2*h^2))*(2/(c_3*(c_3-c_4)))*D_n3 - ...
@@ -110,7 +115,7 @@ while t_n < tvals(2)*ONEMSM
     % Time step, times to evaluate at
     h_fast = c_5*h/ceil(c_5*m);
     tsteps = 0:h_fast:c_5*h;
-
+            
     % Determine the largest index so that c_6*h < tsteps(index)
     index  = floor(c_6*h/h_fast);
     
@@ -118,14 +123,19 @@ while t_n < tvals(2)*ONEMSM
     [~,Y,nflocal] = solve_ERKfast(fcn,[0,tsteps(index)],Y0,B,h_fast);
     Yim = Y(:,2);
     Pdata.ffast   = Pdata.ffast + nflocal + 2;     % two from D_n3/D_n4 evaluation?
-
-    % Determine step leftover 
-    h_leftover = c_6*h - tsteps(index);
     
-    % Solve for U_{n,6}
-    [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_6*h],Yim,B,h_leftover);
-    U_n6 = Y(:,2);
-    Pdata.ffast   = Pdata.ffast + nflocal;
+    if mod(c_6*h,h_fast) > eps
+
+        % Determine step leftover 
+        h_leftover = c_6*h - tsteps(index);
+    
+        % Solve for U_{n,6}
+        [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_6*h],Yim,B,h_leftover);
+        U_n6 = Y(:,2);
+        Pdata.ffast   = Pdata.ffast + nflocal;
+    else 
+        U_n6 = Yim;
+    end
     
     %Solve for U_{n,5}
     [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_5*h],Yim,B,h_fast);
