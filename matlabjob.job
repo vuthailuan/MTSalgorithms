@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -J matlab_test
+#SBATCH -o test.out
+#SBATCH -e test.err
+#SBATCH -n 1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p standard-mem-s
+#SBATCH -t 10
+#SBATCH --exclusive
+
+# load Matlab to environment
+module load matlab/r2017a
+
+# run Matlab script
+matlab -singleCompThread -nodisplay -nosplash -r "disp('script was run'); exit"
+
