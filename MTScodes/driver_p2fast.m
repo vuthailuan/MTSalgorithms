@@ -1,4 +1,4 @@
-% driver for stiff brusselator test problem:
+% driver for stiff brusselator test problem: (old) 
 %      u' = a - (w+1)*u + u^2*v,
 %      v' = w*u - u^2*v,
 %      w' = (b-w)/ep - u*w,

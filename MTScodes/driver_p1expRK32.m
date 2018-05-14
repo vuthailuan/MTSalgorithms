@@ -1,9 +1,10 @@
-% driver for Prothero Robinson test problem:
+% driver for Prothero Robinson test problem  (expERK32):
 %      u' = gamma*u + epn*v-gamma*cos(t) - epn*cos(w*t) - sin(t),
 %      v' = epn*u + v -epn*cos(t) - epn*cos(w*t) - sin(t)-w*sin(w*t),
 % where u(0) = 1.0, v(0) = 1.0, with parameters w=100,
 % gamma = -1/w and epn = 1/w.  We evaluate over the time interval [0,2]. 
-% A multiple time stepping method is used 
+% A multiple time stepping method is used and compared against analytical
+% solution
 %
 % Rujeko Chinomona
 % Department of Mathematics
@@ -32,7 +33,7 @@ Tf   = 2;                                        % end time
 n    = 3;
 tout = linspace(0,Tf,n);                          % immediate times for solution
 h    = 1e-2*0.5.^(0:5);                           % large time step
-m    = 10;                                        % divisor for smaller time step
+m    = 20;                                        % divisor for smaller time step
 c2   = 1/3;
 
 % Initialize problem variables/ allocate space
@@ -62,7 +63,8 @@ for j = 1:length(h)
         
     end
     telapsed = toc(tstart);
-    time(j) = telapsed;  
+    time(j) = telapsed; 
+    
     % Error calculation
     err_max(j) = max(max(abs(Y- Ytrue)));
        
@@ -82,10 +84,10 @@ figure
 loglog(h,err_max,'b','LineWidth',2);
 title([mname,' Error'],'Fontsize',14),xlabel('h','FontSize',12),ylabel('Error','FontSize',12)
 legend('absolute','Location','Best')
-print('-dpng',['p1_expRK32 Error (',mname,')'])
+print('-dpng',['p1_expRK32Error(',mname,')'])
 
 % Time plot
 figure
 loglog(time,err_max,'b','LineWidth',2);
-title([mname,' Time Elapsed'],'Fontsize',14),xlabel('h','Fontsize',12),ylabel('Time','Fontsize',12)
-print('-dpng',['p1_expRK32 efficiency (',mname,')'])
+title([mname,' Time Elapsed'],'Fontsize',14),xlabel('time','Fontsize',12),ylabel('Error','Fontsize',12)
+print('-dpng',['p1_expRK32efficiency(',mname,')'])

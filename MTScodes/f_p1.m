@@ -15,6 +15,6 @@ epsilon = Pdata.epsilon;
 
 % form the ODE RHS
 dy = [gamma*y(1)+epsilon*y(2)-gamma*cos(t)-epsilon*cos(w*t)-sin(t);...
-    epsilon*y(1)-y(2)-epsilon*cos(t)-cos(w*t)-w*sin(w*t)];
+    epsilon*y(1)+y(2)-epsilon*cos(t)-cos(w*t)-w*sin(w*t)];
 end
 % end function

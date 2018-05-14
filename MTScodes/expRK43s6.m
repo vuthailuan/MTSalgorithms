@@ -30,6 +30,9 @@ function [u_n] = expRK43s6(An, gn, mname, u0, m, tvals,c, h)
 % Southern Methodist University
 % Spring 2018
 
+global Pdata;
+Pdata.ffast;
+Pdata.fslow;
 % Set problem parameters
 c_2      = c(1);
 c_3      = c(2);
@@ -54,7 +57,8 @@ while t_n < tvals(2)*ONEMSM
     p_n2 = feval(gn,t_n,u_n);
     fcn = @(t,y) feval(An)*y + p_n2;
     h_fast = c_2*h/ceil(c_2*m);
-    [~,Y,~] = solve_ERKfast(fcn,[0,c_2*h],Y0,B,h_fast);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[0,c_2*h],Y0,B,h_fast);
+    Pdata.ffast   = Pdata.ffast + nflocal + 1;     % one from p_n2 evaluation?
     U_n2 = Y(:,2);
     
     % Define intermediate function
@@ -75,20 +79,23 @@ while t_n < tvals(2)*ONEMSM
     index  = floor(c_4*h/h_fast);
     
     % Set an intermediate Y value
-    [~,Y,~] = solve_ERKfast(fcn,[0,tsteps(index)],Y0,B,h_fast);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[0,tsteps(index)],Y0,B,h_fast);
     Yim = Y(:,2);
+    Pdata.ffast   = Pdata.ffast + nflocal + 1;     % one from D_n2 evaluation?
     
     % Determine step leftover 
     h_leftover = c_4*h - tsteps(index);
     
     % Solve for U_{n,4}
-    [~,Y,~] = solve_ERKfast(fcn,[tsteps(index),c_4*h],Yim,B,h_leftover);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_4*h],Yim,B,h_leftover);
     U_n4 = Y(:,2);
+    Pdata.ffast   = Pdata.ffast + nflocal; 
     
     %Solve for U_{n,3}
-    [~,Y,~] = solve_ERKfast(fcn,[tsteps(index),c_3*h],Yim,B,h_fast);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_3*h],Yim,B,h_fast);
     U_n3 = Y(:,2);
-      
+    Pdata.ffast   = Pdata.ffast + nflocal;
+    
     % Intermediate functions D_n3 and D_n4
     D_n3 = D_ni(t_n,c_3,U_n3);
     D_n4 = D_ni(t_n,c_4,U_n4);
@@ -108,19 +115,22 @@ while t_n < tvals(2)*ONEMSM
     index  = floor(c_6*h/h_fast);
     
     % Set an intermediate Y value
-    [~,Y,~] = solve_ERKfast(fcn,[0,tsteps(index)],Y0,B,h_fast);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[0,tsteps(index)],Y0,B,h_fast);
     Yim = Y(:,2);
-    
+    Pdata.ffast   = Pdata.ffast + nflocal + 2;     % two from D_n3/D_n4 evaluation?
+
     % Determine step leftover 
     h_leftover = c_6*h - tsteps(index);
     
     % Solve for U_{n,6}
-    [~,Y,~] = solve_ERKfast(fcn,[tsteps(index),c_6*h],Yim,B,h_leftover);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_6*h],Yim,B,h_leftover);
     U_n6 = Y(:,2);
+    Pdata.ffast   = Pdata.ffast + nflocal;
     
     %Solve for U_{n,5}
-    [~,Y,~] = solve_ERKfast(fcn,[tsteps(index),c_5*h],Yim,B,h_fast);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[tsteps(index),c_5*h],Yim,B,h_fast);
     U_n5 = Y(:,2);
+    Pdata.ffast   = Pdata.ffast + nflocal;
     
     % Intermediate functions D_n5 and D_n6
     D_n5 = D_ni(t_n,c_5,U_n5);
@@ -132,7 +142,7 @@ while t_n < tvals(2)*ONEMSM
         (t^2/(2*h^2))*(2/(c_5*(c_5-c_6)))*D_n5 - ...
         (t^2/(2*h^2))*(2/(c_6*(c_5-c_6)))*D_n6; 
 
-%     % Alternate q
+%     % Alternative q
 %     q_n6 = @(t) p_n2 + (t/h)*(-c_4/(c_3*(c_3-c_4)))*D_n3 +...
 %         (t/h)*(c_3/(c_4*(c_3-c_4)))*D_n4 +...
 %         (t^2/(2*h^2))*(2/(c_3*(c_3-c_4)))*D_n3 - ...
@@ -140,8 +150,9 @@ while t_n < tvals(2)*ONEMSM
     
     fcn = @(t,y) feval(An)*y + q_n6(t);
     h_fast = h/m;
-    [~,Y,~] = solve_ERKfast(fcn,[0,h],Y0,B,h_fast);
+    [~,Y,nflocal] = solve_ERKfast(fcn,[0,h],Y0,B,h_fast);
     u_np1 = Y(:,2);
+    Pdata.fslow = Pdata.fslow + nflocal + 2; 
     
     % Update time step
     t_n = t_n + h;

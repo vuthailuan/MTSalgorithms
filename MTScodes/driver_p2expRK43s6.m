@@ -1,4 +1,4 @@
-% driver for stiff brusselator test problem:
+% driver for stiff brusselator test problem (expRK43s6):
 %      u' = a - (w+1)*u + u^2*v,
 %      v' = w*u - u^2*v,
 %      w' = (b-w)/ep - u*w,
@@ -31,7 +31,7 @@ Tf   = 2;                                        % end time
 n    = 3;
 tout = linspace(0,Tf,n);                          % immediate times for solution
 h    = 1e-1*0.5.^(0:5);                           % large time step
-m    = 25;                                        % divisor for smaller time step
+m    = 20;                                        % divisor for smaller time step
 %c    = [1/2,1/2,1/3,1/2,1];
 c    = [1/2,1/2,1/3,5/6,1/3];
 
@@ -94,12 +94,12 @@ figure
 loglog(h,err_max,'b','LineWidth',2);
 title([mname,' Error'],'Fontsize',14),xlabel('h','FontSize',12),ylabel('Error','FontSize',12)
 legend('absolute','Location','Best')
-print('-dpng',['p2_expRK43s6 Error (',mname,')'])
+print('-dpng',['p2_expRK43s6Error(',mname,')'])
 
 % Time plot
 figure
 loglog(time,err_max,'b','LineWidth',2);
-title([mname,' Time Elapsed'],'Fontsize',14),xlabel('h','Fontsize',12),ylabel('Time','Fontsize',12)
-print('-dpng',['p2_expRK43s6 efficiency (',mname,')'])
+title([mname,' Time Elapsed'],'Fontsize',14),xlabel('time','Fontsize',12),ylabel('Error','Fontsize',12)
+print('-dpng',['p2_expRK43s6efficiency(',mname,')'])
 
 % end of script

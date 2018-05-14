@@ -1,4 +1,4 @@
-% driver for stiff brusselator test problem:
+% driver for stiff brusselator test problem (expRK32s3):
 %      u' = a - (w+1)*u + u^2*v,
 %      v' = w*u - u^2*v,
 %      w' = (b-w)/ep - u*w,
@@ -31,7 +31,7 @@ Tf   = 2;                                        % end time
 n    = 3;
 tout = linspace(0,Tf,n);                          % immediate times for solution
 h    = 1e-1*0.5.^(0:10);                           % large time step
-m    = 25;                                        % divisor for smaller time step
+m    = 20;                                        % divisor for smaller time step
 c2   = 1/3;                                       % c_2 value free but not 2/3
 
 % Parameters for built-in MATLAB ode solver
@@ -95,12 +95,12 @@ figure
 loglog(h,err_max,'b','LineWidth',2);
 title([mname,' Error'],'Fontsize',14),xlabel('h','FontSize',12),ylabel('Error','FontSize',12)
 legend('absolute','Location','Best')
-print('-dpng',['expRK32s3 Error (',mname,')'])
+print('-dpng',['expRK32s3Error(',mname,')'])
 
 % Time plot
 figure
 loglog(time,err_max,'b','LineWidth',2);
-title([mname,' Time Elapsed'],'Fontsize',14),xlabel('h','Fontsize',12),ylabel('Time','Fontsize',12)
-print('-dpng',['expRK32s3 efficiency (',mname,')'])
+title([mname,' Time Elapsed'],'Fontsize',14),xlabel('time','Fontsize',12),ylabel('Error','Fontsize',12)
+print('-dpng',['expRK32s3efficiency(',mname,')'])
 
 % end of script

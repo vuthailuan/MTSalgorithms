@@ -1,5 +1,5 @@
-function [tvals,Y,nsteps] = solve_ERKfast(fcn,tvals,Y0,B,h)
-% usage: [tvals,Y,nsteps] = solve_ERKfast(fcn,tvals,Y0,B,h)
+function [tvals,Y,nf] = solve_ERKfast(fcn,tvals,Y0,B,h)
+% usage: [tvals,Y,nf] = solve_ERKfast(fcn,tvals,Y0,B,h)
 %
 % Explicit Runge-Kutta solver for the vector-valued ODE problem 
 %     y' = F(t,Y), t in tvals, y in R^m,
@@ -7,7 +7,7 @@ function [tvals,Y,nsteps] = solve_ERKfast(fcn,tvals,Y0,B,h)
 %
 % Inputs:
 %     fcn    = string holding function name for F(t,Y)
-%     tvals  = [t0, t1, t2, ..., tN]
+%     tvals  = vector of start time and final time [t0,tf]
 %     Y0     = initial value array (column vector of length m)
 %     B      = Butcher matrix for ERK coefficients, of the form
 %                 B = [c A;
@@ -20,9 +20,9 @@ function [tvals,Y,nsteps] = solve_ERKfast(fcn,tvals,Y0,B,h)
 %
 % Outputs: 
 %     tvals  = the same as the input array tvals
-%     y      = [y(t0), y(t1), y(t2), ..., y(tN)], where each
+%     y      = [y(t0),y(tN)], where each
 %               y(t*) is a column vector of length m.
-%     nsteps = number of internal time steps taken by method
+%     nf = number of function calls
 %
 % Rujeko Chinomona
 % Department of Mathematics
@@ -39,7 +39,6 @@ c = B(1:s,1);         % stage time fraction array
 A = B(1:s,2:s+1);     % RK coefficients
 
 % initialize output arrays
-%N = length(tvals);
 m = length(Y0);
 Y = zeros(m,1);
 Y(:,1) = Y0;
@@ -50,14 +49,15 @@ ONEMSM   = 1-sqrt(eps);
 % initialize temporary variables
 t = tvals(1);
 Ynew = Y0;
+      
+% initialize work & function call counter
+nsteps = 0;
+tstep = 2; 
 
 % create Fdata structure for evaluating solution
 Fdata.fname = fcn;    % ODE RHS function name
 Fdata.B     = B;      % Butcher table 
-       
-% initialize work counter
-nsteps = 0;
-tstep = 2; 
+Fdata.nf    = 0;
 
 % loop over internal time steps to get to desired output time
 while (t < tvals(tstep)*ONEMSM) 
@@ -66,7 +66,7 @@ while (t < tvals(tstep)*ONEMSM)
     Fdata.yold = Y0;
 
     % set Fdata values for this step
-    Fdata.t    = t;    % time of last successful step
+    Fdata.t    = t;    % time step
 
     % initialize data storage for multiple stages
     z = zeros(m,s);
@@ -78,6 +78,7 @@ while (t < tvals(tstep)*ONEMSM)
 	    z(:,stage) = Y0;
         for j=1:stage-1
             z(:,stage) = z(:,stage) + h*A(stage,j)*feval(fcn,t+h*c(j),z(:,j));
+            Fdata.nf = Fdata.nf + 1;
         end
     end
 
@@ -95,7 +96,7 @@ end  % end while loop attempting to solve steps to next output time
 
 % store updated solution in output array
 Y(:,tstep) = Ynew;
-
+nf = Fdata.nf;
 % end solve_ERK function
 end
 
@@ -129,6 +130,7 @@ f = zeros(nvar,s);
 for is=1:s
    t = Fdata.t + Fdata.h*c(is);
    f(:,is) = feval(Fdata.fname, t, z(:,is));
+   Fdata.nf = Fdata.nf + 1;
 end
 
 % form the solutions

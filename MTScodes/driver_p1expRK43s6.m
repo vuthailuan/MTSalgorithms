@@ -1,4 +1,4 @@
-% driver for Prothero Robinson test problem:
+% driver for Prothero Robinson test problem (expRK43s6):
 %      u' = gamma*u + epn*v-gamma*cos(t) - epn*cos(w*t) - sin(t),
 %      v' = epn*u + v -epn*cos(t) - epn*cos(w*t) - sin(t)-w*sin(w*t),
 % where u(0) = 1.0, v(0) = 1.0, with parameters w=100,
@@ -19,7 +19,7 @@ Jn    = 'J_p1';
 gn    = 'g_p1';                                    % non-stiff part 
 An    = 'A_p1';                                    % stiff part
 yn    = 'y_p1';
-mname = 'ERK-3-3';                                 % explicit RK method
+mname = 'ERK-4-4';                                 % explicit RK method
 
 % Set problem parameters
 global Pdata;
@@ -32,7 +32,7 @@ Tf   = 2;                                        % end time
 n    = 3;
 tout = linspace(0,Tf,n);                          % immediate times for solution
 h    = 1e-2*0.5.^(0:5);                           % large time step
-m    = 10;                                        % divisor for smaller time step
+m    = 20;                                        % divisor for smaller time step
 %c    = [1/2,1/2,1/3,1/2,1];
 c    = [1/2,1/2,1/3,5/6,1/3];
 
@@ -84,10 +84,10 @@ end
 % loglog(h,err_max,'b','LineWidth',2);
 % title([mname,' Error'],'Fontsize',14),xlabel('h','FontSize',12),ylabel('Error','FontSize',12)
 % legend('absolute','Location','Best')
-% print('-dpng',['p1_expRK43s6 Error (',mname,')'])
+% print('-dpng',['p1_expRK43s6Error(',mname,')'])
 % 
 % % Time plot
 % figure
 % loglog(time,err_max,'b','LineWidth',2);
-% title([mname,' Time Elapsed'],'Fontsize',14),xlabel('h','Fontsize',12),ylabel('Time','Fontsize',12)
-% print('-dpng',['p1_expRK43s6 efficiency (',mname,')'])
+% title([mname,' Time Elapsed'],'Fontsize',14),xlabel('time','Fontsize',12),ylabel('Error','Fontsize',12)
+% print('-dpng',['p1_expRK43s6efficiency(',mname,')'])

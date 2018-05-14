@@ -1,5 +1,5 @@
 function driver2tests(mname,m)
-% driver for stiff brusselator test problem:
+% driver for stiff brusselator test problem: (Old version)
 %      u' = a - (w+1)*u + u^2*v,
 %      v' = w*u - u^2*v,
 %      w' = (b-w)/ep - u*w,
