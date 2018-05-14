@@ -136,6 +136,11 @@ title([mname,' Error'],'Fontsize',14),xlabel('h','FontSize',12),ylabel('Error','
 legend('absolute','Location','Best')
 print('-dpng',['p2_expRK43s6Error(',mname,')'])
 
+% best-fit convergence rate
+p = polyfit(log(h),log(err_irk),1);
+fprintf('best-fit convergence rate = %g\n', p(1));
+
+
 % Time plot
 figure
 loglog(time,err_irk,'b','LineWidth',1.5);
