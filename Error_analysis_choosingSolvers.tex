@@ -1,0 +1,19 @@
+\section{Error analysis and on choosing ODE solvers}
+\label{sec4}
+%%-----------
+In this section, we will give error bounds and discuss how to choose ODE
+solvers for solving modified differential equations arising in the above mentioned
+MTS algorithms.
+The main aim is to obtain resulted approximations which should have the same order of accuracy as the considered
+exponential integrators.
+
+For the local error analysis of scheme \eqref{eq4}, we consider one step with initial value $\tilde{u}_n=u(t_n)$ on the exact solution, i.e.
+\begin{subequations} \label{eq5.1}
+\begin{align}
+ U_{n,i}&= \ee^{c_i h A}u_n +h \sum_{j=1}^{s}a_{ij}(h A) g(t_n +c_j h, U_{n,j}), \q  1\leq i\leq s,  \label{eq5.1a} \\
+u_{n+1} &= \ee^{h A}u_n +  h \sum_{i=1}^{s}b_{i}(h A)g(t_n +c_i h, U_{n,i}).  \label{eq5.1b} 
+\end{align} 
+\end{subequations}
+Let $\tilde{e}_{n+1}=\hat{u}_{n+1}- \tilde{u}_{n+1}$
+denote the local error, i.e., the difference between the numerical solution $\hat{u}_{n+1}$ after one step starting
+from $\tilde{u}_{n}$ and the corresponding exact solution of \eqref{eq1} at $t_{n+1}$.

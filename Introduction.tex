@@ -1,0 +1,30 @@
+\section{Introduction}
+\label{sec1}
+In this paper, we are concerned with the construction and implementation of efficient MTS algorithms based on various classes of  explicit one-step exponential integrators. The resulting algorithms will be applied for solving stiff ordinary differential equations (ODEs) of the form 
+\begin{equation} \label{eq1}
+u'(t)=F(t,u(t))=Au(t) + g(t,u(t)), \q  u(t_0)=u_0,
+\end{equation}
+on the interval $t_0\leq t \leq T$, where the vector field $F(t,u(t))$ can be decomposed into a linear stiff part $Au(t)$ and a nonlinear nonstiff part $g(t,u(t))$.
+Such systems belong to the class of stiff-nonstiff problems (couple systems of different time scales). 
+They are usually resulted from the spatial discretization of time-dependent partial differential equations (PDEs) by means of a finite-difference, finite-element or some spectral method. 
+Our main interest lies in the case where the stiff part is often cheap to compute while the nonstiff part is expensive to evaluate. This case is common in practice when using a non-uniform grid for the spatial discretization of PDEs.
+
+Among numerical methods for solving \eqref{eq1}, exponential integrators have shown to be very competitive in recent years, see for instances, \cite{HL97,HLS98,CM02,HO05a,HO05b,LO14a,LO14b}. 
+So far, most methods for the implementation of exponential integrators require the approximation of products of matrix functions with vectors, i.e., $\phi (A)v$,  $A\in \mathbb{R}^{d\times d}, \ v\in \mathbb{R}^{d}$. Depending on the structure of $A$, there are available a number of efficient methods, 
+for instances, diagonalization, Pad\'e approximation 
+(if  $A$ is not too large), Chebyshev methods (if $A$ is Hermitian or skew-Hermitian), (rational) Krylov
+subspace methods and Leja interpolation (if $A$ is large). For further details,  we refer the reader to  an overview on exponential integrators and their implementation, see \cite{HO10}. 
+
+Inspired by very recent results \cite{Gander2012,Grote2010,Grote2013a,Grote2013b} on local-time stepping methods for problems related to \eqref{eq1} and  motivated by the idea in \cite[Sect. 5.3]{HO11} in establishing a MTS procedure for exponential multistep methods of Adams-type, we will show how to derive MTS procedures for various classes of explicit
+one-step exponential integrators as well. Starting from a $s$-stage explicit exponential Runge--Kutta method applied to \eqref{eq1}, our approach is to employ the idea of backward errors analysis. In particular, in each integration step, we will search for $s-1$ modified differential equations such that their exact solutions coincide with the corresponding internal stages;  We then show how to compute approximately such exact solutions (i.e., internal stages). From this, we construct an additional modified differential equation for computing approximately the numerical approximation to the exact solution. The construction of such mentioned differential equations is heavily based on the forms of the method's coefficients.
+
+We derive general MTS algorithms (Algorithms~\ref{alg1}-\ref{alg3}) for which can be interpreted as particular implementations (without matrix functions)  of explicit exponential Runge-Kutta (including exponential quadrature rules, exponential time differencing (ETD) methods) and exponential Rosenbrock methods. 
+With such MTS procedures at hand, we are going to construct various examples of MTS schemes with order of accuracy up to four for some well-known exponential integrators in the literature.
+They can be implemented by solving modified differential equations with the help of ODE solvers, which have order of at least the same as the order of the considered exponential integrator.
+
+ For our considered problems, the new algorithms turn out to be very competitive compared to the standard methods.
+Instead of solving nonlinear problems \eqref{eq1}, at each integration step, they reduces to solve full linear ones with some polynomial in $t$ in place of the nonlinearity $g(t,u(t))$ (The stability of  ODE solvers  for solving such linear problems is ensured by using smaller (micro) time steps). Morever, they do not require a starting values procedure as in MTS algorithms for exponential multistep methods and they can easily perform with an adaptive time step control. 
+
+The outline of the paper is the following: In Section~\ref{sec2}, the derivation of the general class of exponential Runge-Kutta methods is represented in a way that leads us to a motivation for constructing MTS procedures based on such schemes. Section~\ref{sec3} is devoted to the derivation of general MTS algorithms for exponential quadrature rules,  ETD methods and exponential Rosenbrock methods. In Section~\ref{sec4}, we discuss about the stability of such MTS algorithms that leads to an appropriate choice of  ODEs solvers for solving the resulting differential equations.   
+Numerical examples are given in Section~\ref{sec6} to illustrate the efficiency of the new MTS schemes with order of accuracy up to four.
+The main results of the paper are Algorithm~\ref{alg1}, Algorithm~\ref{alg2}, Algorithm~\ref{alg3} and various MTS schemes with order of accuracy up to four based on several well-known exponential integrators in the literature.

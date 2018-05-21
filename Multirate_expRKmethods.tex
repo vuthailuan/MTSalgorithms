@@ -1,0 +1,315 @@
+\section{Explicit one-step exponential integrators and MTS algorithms}
+\label{sec3}
+In this section, we restrict our attention to explicit methods of the general
+form \eqref{eq4}.
+Guided by the observation in the previous section, in this section we will derive general MTS algorithms for exponential quadrature rules,  ETD methods and exponential Rosenbrock methods. 
+%%%-----------------------------------------------------------------------
+\subsection{Derivation of a MTS algorithm for exponential quadrature rules}
+\label{sec3.1}
+%%------------
+As a special subclass of exponential Runge--Kutta methods, we mention exponential quadrature rules of collocation type
+(see \cite{HO05a,HO10}). This integrator can be used for solving \eqref{eq1} in the form of linear parabolic problems, that is,
+\begin{equation} \label{eq3.1}
+u'(t)=Au(t) + g(t), \q  u(t_0)=u_0.
+\end{equation}
+It takes the form
+\begin{subequations}\label{eq3.2}
+\begin{equation} \label{eq3.2a}
+u_{n+1} = \ee^{h A}u_n + h \sum_{i=1}^{s}b_{i}(h A)g(t_n +c_i h)  
+\end{equation}
+with 
+\begin{equation} \label{eq3.2b}
+b_i(hA)=\int_{0}^{1} \ee^{(1-\theta)hA} \ell_i(\theta)\dd \tau.
+\end{equation}
+\end{subequations}
+Here, $\ell_i(\tau)$ are the Lagrange basis polynomials 
+\begin{equation} \label{eq3.4}
+\ell_i(\theta)=\prod_{\begin{smallmatrix}m=1\\ m\neq i \end{smallmatrix}}^{s}\frac{\theta-c_m}{c_i-c_m}, \q i=1,\ldots,s.
+\end{equation}
+It should be noted that \eqref{eq3.2} is resulted from a concrete quadrature rule for approximating the integral in \eqref{eq3}, that is based on replacing $g$ by its Lagrange interpolation polynomial using non-confluent collocation nodes $c_1,\ldots,c_s$).\\
+% \begin{equation} \label{eq3.2b}
+% b_i(hA)=\frac{1}{h}\int_{0}^{h} \ee^{(h-\tau)A} \ell_i(\tau)\dd \tau.
+% \end{equation}
+Inserting the form of $b_i(hA)$ in \eqref{eq3.2b} into \eqref{eq3.2a} and changing the integration variable to $\tau=h\theta$, we get
+\begin{equation} \label{eq3.5}
+u_{n+1} = \ee^{h A}u_n + \int_{0}^{h} \ee^{(h-\tau)A} \varrho_{n,s}(\tau) \dd \tau, 
+\end{equation}
+where $\varrho_{n,s}(\tau)$ is a polynomial in $\tau$ and is given by
+\begin{equation} \label{eq3.6}
+\varrho_{n,s}(\tau)=\sum_{i=1}^{s}\ell_i(\tau/h) g(t_n +c_i h).
+\end{equation}
+This polynomial satisfies the collocation conditions $\varrho_{n,s}(c_i h)=g(t_n +c_i h)$.
+Taking a closer look at \eqref{eq3.5}, we see that $u_{n+1}=v_n(h)$, where $v_n(h)$ is the exact solutions of the following differential equation, 
+\begin{equation} \label{eq3.7}
+v'_n(\tau)=Av_n(\tau) +  \varrho_{n,s}(\tau), \q  v_n(0)=u_n \q 
+\end{equation}  
+over the time interval $[0, h]$. From this point of view, one can consider \eqref{eq3.7} as a modified differential equation of \eqref{eq6}. By setting $\hat{u}_0=u_0$, in each step an approximation $\hat{u}_{n+1}$ of $u_{n+1}$ (written as $\hat{u}_{n+1}\approx u_{n+1}$) can be computed by solving the differential equation 
+\begin{equation} \label{eq3.7a}
+y'_n(\tau)=Ay_n(\tau) +  \varrho_{n,s}(\tau), \q  y_n(0)=\hat{u}_n \q 
+\end{equation}
+numerically on the interval $[0, h]$. This task can be carried out by  an ODE solver (see Section~\ref{sec4}) using micro time steps. One obtains $\hat{u}_{n+1}\approx y_n(h)\approx v_n(h)=u_{n+1}$. Therefore, such method can be interpreted as a MTS procedure for exponential quadrature rules (since a macro time step $h$ is also used for computing the polynomials in \eqref{eq3.6}). By using this method, in each integration step, we have to solve the linear problem \eqref{eq3.7a} but only with polynomial $\varrho_{n,s}$ instead of using function $g$ as in the original problem \eqref{eq3.1}. We will give some examples of $\varrho_{n,s}$ as below.
+\begin{examp}\label{ex3.1}\rm
+By denoting $g_{n,i}=g(t_n +c_i h)$ and using formula \eqref{eq3.6} for $s=1,2,3$, we obtain the following polynomials:
+\begin{subequations} \label{eq3.8}
+\begin{align}
+\varrho_{n,1}(\tau)&= g_{n,1}  ,\label{eq3.8a} \\
+\varrho_{n,2}(\tau)&=\frac{1}{h(c_2-c_1)}\big[(g_{n,1}+g_{n,2})\tau- h(c_1 g_{n,1}-c_2 g_{n,2}) \big]   ,\label{eq3.8b} \\
+\varrho_{n,3}(\tau)&=\frac{1}{h^2}\Big[ \frac{(\tau-c_2 h)(\tau-c_3 h)}{(c_1-c_2)(c_1-c_3)}g_{n,1}+\frac{(\tau-c_1 h)(\tau-c_3 h)}{(c_2-c_1)(c_2-c_3)}g_{n,2} \notag \\ 
+&+\frac{(\tau-c_1 h)(\tau-c_2 h)}{(c_3-c_1)(c_3-c_2)}g_{n,3} \Big]   .\label{eq3.8c}
+% \varrho_{n,4}(\tau)&=\frac{1}{h^3}\Big[ \frac{(\tau-c_2 h)(\tau-c_3 h)(\tau-c_4 h)}{(c_1-c_2)(c_1-c_3)(c_1-c_4)}g_{n,1} \Big] +    .\label{eq3.8d} 
+\end{align}
+\end{subequations}  
+\end{examp}
+{\bf Step size control.} 
+It is known that the exponential quadrature rule \eqref{eq3.2} converges with order $s$ 
+% under the assumption that $A$ is the infinitesimal generator of a strongly continuous semigroup $\ee^{tA}$ on some Banach space 
+(see \cite[Sect. 2.2]{HO10}). For an implementation of this scheme using variable step sizes, one can consider together with \eqref{eq3.2} (or its equivalent form \eqref{eq3.5}) a method of order $s-1$ 
+\begin{equation} \label{eq3.9}
+\bar{u}_{n+1} = \ee^{h A}u_n + \int_{0}^{h} \ee^{(h-\tau)A} \varrho_{n,s-1}(\tau) \dd \tau. 
+\end{equation}
+The step size selection is based on the error estimate ${\tt err}_{n+1}=u_{n+1}- \bar{u}_{n+1}$ (see \cite[Chapter IV.8]{HW96}).
+By subtracting \eqref{eq3.9} from \eqref{eq3.5}, it is easy to see that ${\tt err}_{n+1}=w_n(h)$, where $w_n(h)$ is the exact solution of the following differential equation
+\begin{equation} \label{eq3.10}
+w'_n(\tau)=Aw_n(\tau) +  \varrho_{n,s}(\tau)-\varrho_{n,s-1}(\tau), \q  w_n(0)=0 \q 
+\end{equation}  
+over the time interval $[0, h]$. Therefore, in order to avoid computing matrix functions, we can solve \eqref{eq3.10} numerically using micro time steps to obtain an approximate value $\widehat{{\tt err}}_{n+1}$ for ${\tt err}_{n+1}$. This can be done by using the same chosen ODE solver for integrating \eqref{eq3.7}.
+
+As a summarization for such procedure, we state a general MTS algorithm for exponential quadrature rules.
+\begin{algorithm}
+\caption{A general MTS algorithm for exponential quadrature rules}
+\label{alg1}
+\begin{list}{$\bullet $}{}  
+\item \textbf{Input:}  $A$; $g(t)$; $[t_0, T]$;  $u_0$; $s$; non-confluent nodes $c_i$ ($i=1,\ldots,s$); initial step size $h$ (for the case of constant step size, $h=(T-t_0)/N$, where $N$ is the number of sub-intervals).
+\item \textbf{Initialization:}  Set $n=0$; $\hat{u}_0=u_0$. \\
+While $t_0<T$
+\begin{enumerate}
+  %\item $\hat{u}_n=\hat{u}_0$.
+  \item Solve \eqref{eq3.7a} on $[0, h]$  to get $\hat{u}_1 \approx y_0(h).$
+  \item  {[}Step size control{]} Solve \eqref{eq3.10} on $[0, h]$  to get $\widehat{{\tt err}}_1$ and perform  $h:=h_{\text{new}}$.
+  \item Update $ t_0:=t_0+h, \ \hat{u}_0:=\hat{u}_1$, $n:=n+1$. 
+\end{enumerate}
+\item \textbf{Output:} Approximate values $\hat{u}_n\approx u_n, n=1,2,\ldots$ (where
+$u_n$ is the numerical solution at time $t_n$ obtained by an exponential quadrature rule).
+\end{list}
+\end{algorithm}
+%%%-------------------------------------------------------
+\subsection{Derivation of a general MTS algorithm for ETD methods}
+\label{sec3.2}
+%%------------
+The class of ETD methods (see for example \cite{CM02,F78}) is a particular and important subclass of exponential Runge-Kutta methods in the explicit form of \eqref{eq4}. For these integrators, the coefficients $a_{ij}(h A)$ and $b_{i}(h A) $ are linear combinations of the entire functions $\varphi _{k} (c_i h A)$ and $\varphi_{k} (hA),$ respectively. 
+Hence, we can write
+\begin{equation} \label{eq7}
+a_{ij}(h A)=\sum_{k=1}^{\ell_{ij}}\alpha^{(k)}_{ij}\varphi_{k}(c_i hA), \ 
+b_{i}(h A)=\sum_{k=1}^{m_i}\beta^{(k)}_{i}\varphi_{k}(hA), 
+\end{equation} 
+where $\ell_{ij}$ and $m_i$ are positive integers and $\varphi_k$ are given by 
+\begin{equation} \label{eq8}
+\varphi _{k}(z)=\int_{0}^{1} \ee^{(1-\theta )z} \frac{\theta ^{k-1}}{(k-1)!}\dd\theta , \quad k\geq 1.
+\end{equation}
+They satisfy the recurrence relations
+\begin{equation} \label{eq9}
+ \varphi _{k}(z)=\frac{\varphi _{k-1}(z)-\varphi _{k-1}(0)}{z}, \q  \varphi _{0}(z)=\ee^z.
+\end{equation} 
+By changing the integration variable to $\tau=h\theta$ in \eqref{eq8}, we obtain
+\begin{equation} \label{eq10}
+\varphi _{k}(z)=\frac{1}{h^k}\int_{0}^{h} \ee^{(h-\tau)\frac{z}{h}} \frac{\tau^{k-1}}{(k-1)!}\dd\tau , \quad k\geq 1.
+\end{equation}
+Substituting $z=hA$ and $z=c_i hA$ into \eqref{eq10} and inserting the obtained results for $\varphi _{k} (c_i h A)$ and $\varphi_{k} (hA)$ into \eqref{eq7} finally shows that
+\begin{subequations}\label{eq11}
+\begin{align}
+a_{ij}(h A)&=\int_{0}^{c_i h} \ee^{(c_i h-\tau)A} \sum_{k=1}^{\ell_{ij}}\dfrac{\alpha^{(k)}_{ij}}{(c_i h)^{k} (k-1)!}\tau^{k-1}\dd\tau, \label{eq11a}\\ 
+b_{i}(h A)&=\int_{0}^{h} \ee^{(h-\tau)A} \sum_{k=1}^{m_i}\dfrac{\beta^{(k)}_{i}}{h^{k}(k-1)!}\tau^{k-1}\dd\tau. \label{eq11b}
+\end{align}
+\end{subequations}
+We now insert \eqref{eq11} into \eqref{eq4} (in explicit form) to get
+\begin{subequations} \label{eq12}
+\begin{align}
+ U_{n,i}&= \ee^{c_i h A}u_n +\int_{0}^{c_i h} \ee^{(c_i h-\tau)A}   p_{n,i}(\tau) \dd\tau, \q  2\leq i\leq s,  \label{eq12a} \\
+u_{n+1} &= \ee^{h A}u_n +  \int_{0}^{h} \ee^{(h-\tau)A}  q_{n,s}(\tau) \dd\tau  \label{eq12b} 
+\end{align} 
+\end{subequations}
+with 
+\begin{subequations} \label{eq13}
+\begin{align}
+ p_{n,i}(\tau)&= \sum_{j=1}^{i-1} \Big(\sum_{k=1}^{\ell_{ij}}\dfrac{\alpha^{(k)}_{ij}}{c^k_i h^{k-1} (k-1)!}\tau^{k-1}\Big) g(t_n +c_j h, U_{n,j}), \label{eq13a} \\
+q_{n,s}(\tau) &= \sum_{i=1}^{s} \Big(\sum_{k=1}^{m_i}\dfrac{\beta^{(k)}_{i} }{h^{k-1}(k-1)!}\tau^{k-1} \Big) g(t_n +c_i h, U_{n,i})  \label{eq13b} 
+\end{align}
+\end{subequations}  
+are polynomials in $\tau$.\\
+From \eqref{eq12}, we realize that $U_{n,i}=v_{n,i}(c_i h),\ u_{n+1}=v_n(h)$, where $v_{n,i}(c_i h)$ and $v_n(h)$ are the exact solutions of the following differential equations, 
+\begin{subequations} \label{eq14}
+\begin{align}
+v'_{n,i}(\tau)&=Av_{n,i}(\tau) +   p_{n,i}(\tau), \q  v_{n,i}(0)=u_n \q  (2\leq i\leq s), \label{eq14a} \\
+v'_n(\tau)&=Av_n(\tau)  +   q_{n,s}(\tau), \q  v_n(0)=u_n \hspace{2.3cm} \label{eq14b}
+\end{align}
+\end{subequations}  
+over the time intervals $[0, c_i h]$ and $[0, h]$, respectively. These equations can be thus considered as modified differential equations of  \eqref{eq6}. 
+
+% Note that the given forms of $ p_{n,i}(\tau)$ and $q_{n,s}(\tau)$ in \eqref{eq13} are not explicitly defined (except for $ p_{0,2}(\tau)$ and $q_{0,1}(\tau)$ that we know  by using the given value $U_{0,1}=u_0$). 
+Clearly, one could not solve  \eqref{eq14} analytically on the considered intervals for finding $U_{n,i}$ and $u_{n+1}$. 
+Given $\hat{u}_0=u_0$, however, we can compute $\widehat{U}_{n,i}$ and $\hat{u}_{n+1}$ which denote the approximations  
+ of  $ U_{n,i}$ and ${u}_{n+1}$, written as $\widehat{U}_{n,i}  \approx  U_{n,i}$, $\hat{u}_{n+1}  \approx  u_{n+1}$ ($n\geq 0$), respectively.
+First, the idea is to replace the polynomials in \eqref{eq13} by 
+\begin{subequations} \label{eq13n}
+\begin{align}
+ \hat{p}_{n,i}(\tau)&= \sum_{j=1}^{i-1} \Big(\sum_{k=1}^{\ell_{ij}}\dfrac{\alpha^{(k)}_{ij}}{c^k_i h^{k-1} (k-1)!}\tau^{k-1}\Big) g(t_n +c_j h, \widehat{U}_{n,j}), \label{eq13na} \\
+\hat{q}_{n,s}(\tau) &= \sum_{i=1}^{s} \Big(\sum_{k=1}^{m_i}\dfrac{\beta^{(k)}_{i} }{h^{k-1}(k-1)!}\tau^{k-1} \Big) g(t_n +c_i h, \widehat{U}_{n,i}),  \label{eq13nb} 
+\end{align}
+\end{subequations}  
+respectively. 
+Then, $\widehat{U}_{n,i}$ can be computed as numerical solutions (by means of an ODE solver) of the differential equations
+\begin{equation} \label{eq13nc} 
+y'_{n,i}(\tau)=Ay_{n,i}(\tau) +   \hat{p}_{n,i}(\tau), \q  y_{n,i}(0)=\hat{u}_n \q  (2\leq i\leq s)
+\end{equation}
+considered on $[0, c_i h]$. By doing so, we have \ $\widehat{U}_{n,i}\approx y_{n,i}(c_i h) \approx v_{n,i}(c_i h)=U_{n,i}$.\\
+The strategy for computing  $\widehat{U}_{n,i}$  is listed as an iteration below:
+\begin{enumerate}
+\item Setting  $\widehat{U}_{n,1}=\hat{u}_n$. 
+\item Knowing $\widehat{U}_{n,1}$, we get $\hat{p}_{n,2}(\tau)$  from \eqref{eq13na} and solve \eqref{eq13nc} with $i=2$
+ to obtain $\widehat{U}_{n,2}\approx y_{n,2}(c_2 h).$
+\item Knowing $\widehat{U}_{n,1}, \widehat{U}_{n,2}$, we get  $\hat{p}_{n,3}(\tau)$  from \eqref{eq13na} and solve \eqref{eq13nc} with $i=3$
+ to obtain $\widehat{U}_{n,3}\approx y_{n,3}(c_3 h).$ \\
+$\vdots$
+\item Knowing $\widehat{U}_{n,1}, \ldots, \widehat{U}_{n,s-1}$, we get $\hat{p}_{n,s}(\tau)$  from \eqref{eq13na} and solve \eqref{eq13nc} with $i=s$
+ to obtain $\widehat{U}_{n,s}\approx y_{n,s}(c_s h).$ 
+\end{enumerate}
+With  $\widehat{U}_{n,i}$ at hand, the next step is to find  $\hat{q}_{n,s}(\tau) $ 
+ from \eqref{eq13nb}. Finally, $\hat{u}_{n+1}$ can be computed by  an appropriate ODE solver
+using micro time steps to solve the differential equation
+\begin{equation} \label{eq13nd} 
+y'_{n}(\tau)=Ay_{n}(\tau) +   \hat{q}_{n,s}(\tau), \q  y_{n}(0)=\hat{u}_n
+\end{equation}
+on the interval $[0, h]$. Indeed, we have $\hat{u}_{n+1}\approx y_{n}(h) \approx v_{n}(h)=u_{n+1}.$ 
+
+Further details on choosing such ODE solvers will be discussed in Section~\ref{sec4}. 
+Since we have to use a macro time step $h$ for computing the polynomials in \eqref{eq13n}, the method can be interpreted as a MTS procedure based on ETD methods. 
+One can consider this method as a particular implementation of ETD methods. It offers several  interesting features. 
+Instead of solving nonlinear problems \eqref{eq1}, the method reduces to solve full linear 
+differential equations  \eqref{eq13nc} and  \eqref{eq13nd}  with the polynomials in $t$ in place of the nonlinearity $g(t,u(t))$. It can easily  perform adaptive time steps selection (see below) and it does not require a starting values procedure as 
+in MTS algorithms for exponential multistep methods. The stability is ensured by using micro time steps.
+Finally,  it is cheap  if a few stages are used. \\
+{\bf Step size control.} 
+It is possible to establish a variable step sizes implementation for such MTS procedure without 
+computing matrix functions. 
+First, we consider together with  \eqref{eq4b} embedded methods of lower orders
+\begin{equation} \label{eq3.15}
+\bar{u}_{n+1} = \ee^{h A}u_n +  h \sum_{i=1}^{s}\bar{b}_{i}(h A)g(t_n +c_i h, U_{n,i})
+\end{equation}
+that use the same stages $U_{n,i}$, and with weights $\bar{b}_{i}(hA)$. Again, we can represent
+$\bar{b}_{i}(h A)=\sum_{k=1}^{q_i}\bar{\beta}^{(k)}_{i}\varphi_{k}(hA)$ and show that
+\begin{equation} \label{eq3.15a}
+\bar{u}_{n+1}= \ee^{h A}u_n +  \int_{0}^{h} \ee^{(h-\tau)A}  \bar{q}_{n,s}(\tau) \dd\tau  
+\end{equation}
+with 
+\begin{equation}\label{eq3.15b}
+\bar{q}_{n,s}(\tau) = \sum_{i=1}^{s} \Big(\sum_{k=1}^{q_i}\dfrac{\bar{\beta}^{(k)}_{i} }{h^{k-1}(k-1)!}\tau^{k-1} \Big) g(t_n +c_i h, U_{n,i}).  
+\end{equation}  
+To perform a step size selection, it is crucial to compute the error estimate ${\tt err}_{n+1}=u_{n+1}- \bar{u}_{n+1}$.
+In view of \eqref{eq12b} and \eqref{eq3.15a}, we deduce that ${\tt err}_{n+1}=w_n(h),$ where $w_n(h)$ 
+is the exact solution of the following differential equation
+\begin{equation} \label{eq3.15c}
+w'_n(\tau)=Aw_n(\tau) +  q_{n,s}(\tau)-\bar{q}_{n,s}(\tau), \q  w_n(0)=0 \q 
+\end{equation}  
+over the interval $[0,h]$. 
+Again, one could not solve \eqref{eq3.15c} analytically.
+We therefore use the same idea as for solving \eqref{eq14}, that is to replace $q_{n,s}(\tau)$ by $\hat{q}_{n,s}(\tau)$ given in \eqref{eq13nb}, $\bar{q}_{n,s}(\tau)$ by $\widehat{\bar{q}}_{n,s}(\tau)$ which is given by
+\begin{equation}\label{eq3.15d}
+\widehat{\bar{q}}_{n,s}(\tau) = \sum_{i=1}^{s} \Big(\sum_{k=1}^{q_i}\dfrac{\bar{\beta}^{(k)}_{i} }{h^{k-1}(k-1)!}\tau^{k-1} \Big) g(t_n +c_i h, \widehat{U}_{n,i}).  
+\end{equation}
+Instead of working with \eqref{eq3.15c}, we now consider the differential equation
+\begin{equation} \label{eq3.15e}
+z'_n(\tau)=Az_n(\tau) +  \hat{q}_{n,s}(\tau)-\widehat{\bar{q}}_{n,s}(\tau), \q  z_n(0)=0  
+\end{equation} 
+on $[0,h]$. By applying the same chosen ODE solver (for \eqref{eq13nd}) to \eqref{eq3.15e},
+one can compute an approximate value $\widehat{{\tt err}}_{n+1}\approx z_n (h) \approx w_n (h)={\tt err}_{n+1}$. 
+
+We are now ready to summary such MTS procedure by Algorithm~\ref{alg2} below.
+\begin{algorithm}[ht!]
+\caption{A general MTS algorithm for ETD methods}
+\label{alg2}
+\begin{list}{$\bullet $}{}  
+\item \textbf{Input:}  $A$; $g(u)$; $[t_0, T]$; $u_0$; $s$; $c_i$ ($i=1,\ldots,s$); initial step size $h$ (for the case of constant step size, $h=(T-t_0)/N$, where $N$ is the number of sub-intervals).
+\item \textbf{Initialization:}  Set $n=0$; $\hat{u}_0=u_0$.\\
+While $t_0<T$
+\begin{enumerate}
+  \item Set $\widehat{U}_{0,1}=\hat{u}_0$. 
+\item For $i=2,\ldots,s$ do
+\begin{enumerate}
+  \item Find  $\hat{p}_{0,i}(\tau)$ as in \eqref{eq13na}. 
+  \item Solve \eqref{eq13nc} on $[0, c_i h]$ to obtain $\widehat{U}_{0,i}\approx y_{0,i}(c_i h)$.
+\end{enumerate} 
+ \item Find $\hat{q}_{0,s}(\tau)$ as in \eqref{eq13nb} (for a step size control, find also $\widehat{\bar{q}}_{0,s}(\tau)$ as in \eqref{eq3.15d}).
+  \item Solve \eqref{eq13nd} on $[0, h]$ to get $\hat{u}_1\approx y_{0}(h).$
+  \item {[}Step size control{]}  Solve \eqref{eq3.15e} on $[0, h]$  to get $\widehat{{\tt err}}_{1}$) and perform  $h:=h_{\text{new}}$.
+  \item Update $ t_0:=t_0+h, \ \hat{u}_0:=\hat{u}_1$, $n:=n+1$. 
+\end{enumerate}
+\item \textbf{Output:} Approximate values $\hat{u}_n\approx u_n, n=1,2,\ldots$ (where
+$u_n$ is the numerical solution at time $t_n$ obtained by an ETD method).
+\end{list}
+\end{algorithm}
+
+In order to perform Algorithm~\ref{alg2}, we consider some well-known ETD methods in the literature and give explicit forms of the polynomials in \eqref{eq13n} and \eqref{eq3.15d} for a given value of $s$. For simplicity, we denote $\varphi_{k}=\varphi_{k} (z), \varphi_{k,i}=\varphi_{k} (c_i z)$. 
+% \begin{examp}\label{ex3.2.1}\rm
+% For $s=1$, we consider the exponential Euler method 
+% \begin{equation} \label{eq3.16}
+% u_{n+1}=\ee^{hA}u_n+h\varphi_1(hA)g(t_n, u_n),
+% \end{equation}
+% which is of stiff order one (see \cite[Sect. 4.2]{HO05b}).
+% For this method, we have $m_1=1, \beta^{(1)}_{1}=1$ and thus 
+% $\hat{q}_{n,1}(\tau)=g(t_n, \hat{u}_n)$ from \eqref{eq13nb}.
+% \end{examp}
+\begin{examp}\label{ex3.2.2}\rm
+For $s=2$, we consider the second-order (stiff order two) ETD methods (see \cite[Sect. 5.1]{HO05b}) with a first-order error estimate (the exponential Euler method) which will be called $\mathtt{exprk21}$. Its coefficients are displayed in the following Butcher tableau 
+\begin{displaymath}
+\renewcommand{\arraystretch}{1.3}
+\begin{array}{c|cc}
+0 &&\\
+c_2 & c_2 \varphi_{1,2} &\\[1pt]
+\hline
+& \varphi_1-\frac{1}{c_2}\varphi_2 & \q \frac{1}{c_2}\varphi_2 \\
+& \varphi_1 & 0 
+\end{array}.
+\end{displaymath}
+In this case, we have 
+$\ell_{21}=1, m_1=m_2=2, q_1=1, \alpha^{(1)}_{21}=c_2, \beta^{(1)}_{1}=\bar{\beta}^{(1)}_{1}=1, \beta^{(2)}_{1}=-\frac{1}{c_2}, \beta^{(1)}_{2}=0, \beta^{(2)}_{2}=\frac{1}{c_2}$ ($c_2>0$), $\bar{\beta}^{(k)}_{2}=0 \ \forall k=1,\ldots,q_2.$\\ 
+Using this, one obtains from \eqref{eq13n} and \eqref{eq3.15d}  that
+\begin{subequations} \label{eq3.17}
+\begin{align}
+ \hat{p}_{n,2}(\tau)&=  g(t_n, \hat{u}_n), \label{eq3.17a} \\
+\hat{q}_{n,2}(\tau) &= \tfrac{1}{c_2 h}g(t_n+c_2 h, \widehat{U}_{n,2})\tau + \big(1-\tfrac{\tau}{c_2 h}\big)\hat{p}_{n,2}(\tau),  \label{eq3.17b} \\
+\widehat{\bar{q}}_{n,2}(\tau) &= \hat{p}_{n,2}(\tau). \label{eq3.17c}
+\end{align}
+\end{subequations} 
+\end{examp}
+\begin{examp}\label{ex3.2.3}\rm
+A class of three-stage ($s=3$) ETD methods of stiff order three was constructed in \cite[Sect. 5.2]{HO05b}. We consider this method with a second-order error estimate and name it as $\mathtt{exprk32}$. It is given by
+\begin{displaymath}
+\renewcommand{\arraystretch}{1.3}
+\begin{array}{c|ccc}
+0 &&&\\
+c_2 & c_2 \varphi_{1,2}& &\\
+\frac{2}{3}&\frac{2}{3}\varphi_{1,3}-\frac{4}{9 c_2}\varphi_{2,3}& \q \frac{4}{9 c_2}\varphi_{2,3}&  \\[1pt]
+\hline
+ & \varphi_{1}-\frac{3}{2}\varphi_{2} & 0 &\frac{3}{2}\varphi_{2} \\
+  & \varphi_{1} & \frac{3}{3c_2-2}\varphi_{2} &\frac{3}{2-3c_2}\varphi_{2} 
+\end{array}.
+\end{displaymath}
+From this Butcher tableau, we have 
+$
+\ell_{21}=q_1=1, \ell_{31}=\ell_{32}=m_1=m_3=q_2=q_3=2; \ \alpha^{(1)}_{21}=c_2, \alpha^{(1)}_{31}=\frac{2}{3}, 
+\alpha^{(2)}_{31}=-\frac{4}{9 c_2}, \alpha^{(1)}_{32}=0, \alpha^{(2)}_{32}=\frac{4}{9 c_2}; \
+\beta^{(1)}_{1}=1, \beta^{(2)}_{1}=-\frac{3}{2}, \beta^{(k)}_{2}=0 \ \forall k=1,\ldots,m_2, \beta^{(1)}_{3}=0, \beta^{(1)}_{3}=\frac{3}{2}; \ \bar{\beta}^{(1)}_{2}=\bar{\beta}^{(1)}_{3}=0, \bar{\beta}^{(2)}_{2}=-\bar{\beta}^{(2)}_{3}=\frac{3}{3c_2-2} (c_2 \ne \frac{2}{3}).
+$ 
+It now follows from \eqref{eq13n} and \eqref{eq3.15d} that
+\begin{subequations} \label{eq3.18}
+\begin{align}
+ \hat{p}_{n,2}(\tau)&=  g(t_n, \hat{u}_n), \label{eq3.18a} \\
+ \hat{p}_{n,3}(\tau)&=  \tfrac{1}{c_2 h}g(t_n+c_2 h, \widehat{U}_{n,2})\tau + \big(1-\tfrac{\tau}{c_2 h}\big)\hat{p}_{n,2}(\tau), \label{eq3.18b} \\
+\hat{q}_{n,3}(\tau) &= \tfrac{3}{2 h}g(t_n+ \tfrac{2}{3} h, \widehat{U}_{n,3})\tau +\big(1-\tfrac{3\tau}{2 h}\big)\hat{p}_{n,2}(\tau),  \label{eq3.18c}\\
+\widehat{\bar{q}}_{n,3}(\tau) &= \tfrac{3}{(3c_2-2)h}\big( g(t_n+c_2 h, \widehat{U}_{n,2})-g(t_n+ \tfrac{2}{3} h, \widehat{U}_{n,3})\big)\tau + \hat{p}_{n,2}(\tau).  \label{eq3.18d} 
+\end{align}
+\end{subequations}
+Other three-stage ETD methods can be found in the literature. For instances, a method called ETD3RK was constructed in \cite{CM02} or another one called ETD2CF3 was given in \cite{CMO03}. For these methods, we can use the same way to compute polynomials in  \eqref{eq13n} and \eqref{eq3.15d}. We omit details.   
+\end{examp}
+%%%-------------------------------------------------------------------------
+%%%-------------------------------------------------------------------------

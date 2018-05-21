@@ -1,0 +1,60 @@
+\section{Exponential Runge--Kutta methods and motivation}
+\label{sec2}
+In this section, we recall the idea for deriving the general class of exponential Runge-Kutta methods for solving \eqref{eq1}. Our presentation below will be in a way that motivates a MTS procedure for such schemes. 
+% For more details on the analytical framework, convergence results and the construction of such exponential integrators, we refer the reader to \cite{HO05b,HO10,HOS09}.
+\subsection{Exponential Runge--Kutta methods}
+\label{sec2.1}
+For the derivation of exponential Runge-Kutta methods, it is crucial to use the following representation of the exact solution of \eqref{eq1} at time $t_{n+1}=t_n +h$ by
+the variation-of-constants formula
+\begin{equation} \label{eq3}
+u(t_{n+1})=u(t_n+h)=\ee^{hA}u(t_n) + \int_{0}^{h} \ee^{(h-\tau)A} g(t_n+\tau, u(t_n+\tau)) \dd\tau.
+\end{equation}
+Similarly to the construction of classical Runge--Kutta methods, the idea is to approximate the integral in \eqref{eq3} by a quadrature rule with nodes $c_i$ and weights $b_i(hA)$ ($1\leq i\leq s$). 
+This yields
+\begin{equation} \label{eq3a}
+u(t_{n+1})\approx \ee^{hA}u(t_n) + h\sum_{i=1}^{s} b_i(hA)g(t_n+c_i h, u(t_n+c_i h)).
+\end{equation}
+By applying \eqref{eq3} (with $c_i h$ in place of $h$), the unknown intermediate values $u(t_n+c_i h)$ in \eqref{eq3a} can be represented as 
+\begin{equation} \label{eq3b}
+u(t_n+c_i h)=\ee^{c_i hA}u(t_n) + \int_{0}^{c_i h} \ee^{(c_i h-\tau)A} g(t_n+\tau, u(t_n+\tau)) \dd\tau.
+\end{equation}
+Again, one can use another quadrature rule with the same nodes $c_i$ as before (to avoid the generation of new unknowns) and new weights $a_{ij}(hA)$ to approximate the integral in \eqref{eq3b}. This gives 
+\begin{equation} \label{eq3c}
+u(t_n+c_i h)\approx \ee^{c_i hA}u(t_n) + h\sum_{j=1}^{s} a_{ij}(hA)g(t_n+c_j h, u(t_n+c_j h)).
+\end{equation}
+Now, assuming that approximations 
+$u_n \approx u(t_n)$ and $U_{n,i} \approx u(t_n+c_i h)$ are given. From \eqref{eq3c} and \eqref{eq3a} we obtain the following general class of one-step methods, so-called exponential Runge--Kutta methods
+\begin{subequations} \label{eq4}
+\begin{align}
+ U_{n,i}&= \ee^{c_i h A}u_n +h \sum_{j=1}^{s}a_{ij}(h A) g(t_n +c_j h, U_{n,j}), \q  1\leq i\leq s,  \label{eq4a} \\
+u_{n+1} &= \ee^{h A}u_n +  h \sum_{i=1}^{s}b_{i}(h A)g(t_n +c_i h, U_{n,i}).  \label{eq4b} 
+\end{align} 
+\end{subequations}
+It turns out that the equilibria of \eqref{eq1} are preserved if the coefficients $a_{ij}(z)$ and
+$b_i(z)$ of the method fulfill the following simplifying assumptions (see \cite{HO05b})
+\begin{equation}  \label{eq5}
+\sum_{i=1}^{s}b_{i}(z)= \varphi _{1} (z), \quad \quad
+\sum_{j=1}^{s}a_{ij}(z)=c_i \varphi _{1} (c_i z), \quad 1\leq i\leq s,
+\end{equation}
+where $\varphi_{1}(z)=(\ee^z -1)/z$.\\
+Throughout the paper we will consider methods of the general form \eqref{eq4} that satisfy \eqref{eq5}.
+
+Note that an {\em explicit} method of the form \eqref{eq4} is the case when $a_{ij}(h A)=0$ for all $i\leq j$ (implying $c_1=0$ due to the second condition in \eqref{eq5} and consequentially $U_{n,1}=u_n$). The sum in \eqref{eq4a} is then considered over index $j$ from $1$ to $i-1$ only. Thus, the internal stages $U_{n,i}$ ($2\leq i\leq s$) can be computed explicitly one after the other, which will be finally inserted into \eqref{eq4b} to find $u_{n+1}$.
+
+Clearly, an efficient algorithm for computing the products of matrix functions with vectors of the form $\phi (hA)v$,  $A\in \mathbb{R}^{d\times d}, \ v\in \mathbb{R}^{d}$
+plays an important role in implementing \eqref{eq4}. As we have mentioned in the Introduction, there are several options for performing this task, depending on the structure of $A$. In contrast to these approaches, however,  
+we will introduce an alternative way to implement the class of exponential one-step methods \eqref{eq4} without matrix functions. 
+This method will be later considered as a MTS algorithm.
+Inspired by the idea presented in \cite[Sect. 5.3]{HO11}, first, we start with an observation which will be described as below. 
+%%%-----------------------------------
+\subsection{Motivation}
+\label{sec2.2}
+In view of \eqref{eq3} and \eqref{eq3c}, one can see that $u(t_{n+1})$ and $u(t_n +c_i h)$ are the exact
+solutions of the following differential equation
+\begin{equation}  \label{eq6}
+v'(\tau)=Av(\tau) + g(t_n+\tau,u(t_n+\tau)), \q  v(0)=u(t_n),
+\end{equation}
+evaluated at $\tau=h$ and $\tau=c_i h$, respectively. In other words, solving \eqref{eq6} exactly (by means of the variation-of-constants formula) on the time intervals $[0, h]$ and $[0, c_i h]$ shows that $v(h)=u(t_{n+1})$,  $v(c_i h)=u(t_n +c_i h)$.
+Unfortunately, one could not find such analytical solutions explicitly, since $u(t_n)$ and $u(t_n+\tau)$ are unknown values. This observation, however, suggests us to employ the idea of backward error analysis (see, for instance \cite[Chap. IX]{HLW06}).
+
+ Given an exponential Runge-Kutta method \eqref{eq4}, we are going to search for modified differential equations of \eqref{eq6} in which their exact solutions at $\tau=c_i h$ and $\tau=h$ will be $U_{n,i}$  ($2\leq i\leq s$) and $u_{n+1}$, respectively. If one could find such desired equations, then by solving them numerically we can obtain the corresponding approximations for $U_{n,i}$ and $u_{n+1}$. In the following sections, we will show how this can be done with most popular subclasses of explicit method of the form \eqref{eq4}.

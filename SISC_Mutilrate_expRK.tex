@@ -1,0 +1,121 @@
+% SIAM Article Template
+\documentclass[review,onefignum,onetabnum]{siamart171218}
+
+% Optional PDF information
+\ifpdf
+\hypersetup{
+  pdftitle={New multirate methods for stiff differential equations},
+  pdfauthor={V. T. Luan, D. R. Reynolds, and R. Chinomona}
+}
+\fi
+\usepackage{lipsum}
+\usepackage{epstopdf}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{bigstrut}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsmath} 		% extended math package from AMS
+\usepackage{amssymb} 		% extended math symbol package from AMS
+\usepackage{amstext}
+\usepackage{amsfonts}		% extended math font package from AMS
+\usepackage{url}		    % allows us to enter website url's... hyperlinked!
+\usepackage{hhline}			% creates nice borders for tables
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{enumitem}
+
+\numberwithin{equation}{section}
+\newcommand{\q}{\quad}
+\newcommand{\ee}{{\rm e}\hspace{1pt}}
+
+\newtheorem{examp}[subsubsection]{Example}
+\newcommand{\dd}{\hspace{0.5pt}{\rm d}\hspace{0.5pt}}
+
+% The next statement enables references to information in the
+% supplement. See the xr-hyperref package for details.
+% Packages and macros go here
+
+\ifpdf
+  \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
+\else
+  \DeclareGraphicsExtensions{.eps}
+\fi
+
+% Add a serial/Oxford comma by default.
+\newcommand{\creflastconjunction}{, and~}
+
+% Used for creating new theorem and remark environments
+\newsiamremark{remark}{Remark}
+\newsiamremark{hypothesis}{Hypothesis}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\newsiamthm{claim}{Claim}
+
+% Sets running headers as well as PDF title and authors
+\headers{New multirate methods for stiff differential equations}{V. T. Luan, D. R. Reynolds, and R. Chinomona}
+
+% Title. If the supplement option is on, then "Supplementary Material"
+% is automatically inserted before the title.
+\title{New multirate methods for stiff differential equations \thanks{Submitted to the editors DATE.
+\funding{This work was funded by the...}}}
+
+% Authors: full names plus addresses.
+\author{Vu Thai Luan, Daniel R. Reynolds,  Rujeko Chinomona \thanks{... 
+  (\email{vluan@smu.edu}).}
+  }
+% \and Daniel R. Reynolds \thanks{... 
+%   (\email{@smu.edu}, \email{@smu.edu}).}
+% \and Rujeko Chinomona}
+
+\usepackage{amsopn}
+\DeclareMathOperator{\diag}{diag}
+
+
+%%% Local Variables: 
+
+
+\begin{document}
+
+\maketitle
+
+% REQUIRED
+\begin{abstract}
+\input{Abstract.tex}
+\end{abstract}
+
+% REQUIRED
+\begin{keywords}
+multiple time stepping, exponential integrators, exponential Runge--Kutta methods, exponential quadrature rules, exponential time differencing (ETD) methods 
+\end{keywords}
+
+% REQUIRED
+\begin{AMS}
+
+\end{AMS}
+
+%%% body -------------------------------------------------------------------
+\input{Introduction.tex}
+
+\input{ExpRKmethods_motivation.tex}
+
+\input{Multirate_expRKmethods.tex}
+
+\input{Error_analysis_choosingSolvers.tex}
+
+\input{Experiments.tex}
+
+\input{Conclusion.tex}
+
+\input{Acknowledgements.tex}
+
+
+
+%%% bibliography -----------------------------------------------------------
+\bibliographystyle{siamplain}
+\bibliography{references}
+
+\end{document} 
+
